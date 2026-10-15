@@ -1,0 +1,165 @@
+/* Color tokens — two tiers.
+   Tier 1: Tailwind v4 palettes (slate, purple, green, red, amber, …)
+           plus CIQ names: brand (= purple) and primary-dark (= slate-950).
+   Tier 2: purpose names used in components (fg, canvas, surface, border, action, feedback).
+   Dark mode is a .dark class on an ancestor. It re-points Tier 2 only.
+   Legacy shadcn names (--primary, --background, …) alias Tier 2 so existing
+   components keep working until they are migrated. */
+
+:root {
+  /* --- Tier 1: CIQ primitives (aliases of Tailwind palettes) --- */
+  --brand: var(--color-purple-600);
+  --brand-hover: var(--color-purple-700);
+  --brand-disabled: var(--color-purple-200);
+  --brand-dark: var(--color-purple-950);
+  --primary-dark: var(--color-slate-950);
+
+  /* --- Tier 2: foreground (text + icons) --- */
+  --fg-primary: var(--color-slate-900);
+  --fg-secondary: var(--color-slate-700);
+  --fg-tertiary: var(--color-slate-500);
+  --fg-disabled: var(--color-slate-300);
+  --fg-inverse: var(--color-white);
+  --fg-brand: var(--color-purple-950);
+
+  /* --- Tier 2: surfaces (no "bg" in the token name) --- */
+  --canvas: var(--color-white);
+  --surface: var(--color-white);
+  --surface-subtle: var(--color-slate-100);
+  --surface-muted: var(--color-slate-50);
+
+  /* --- Tier 2: borders --- */
+  --border-default: var(--color-slate-200);
+  --border-strong: var(--color-slate-300);
+  --border-focus: var(--color-purple-400);
+
+  /* --- Tier 2: action (brand / interactive) --- */
+  --action-primary: var(--color-purple-600);
+  --action-primary-hover: var(--color-purple-700);
+  --action-primary-disabled: var(--color-purple-200);
+  --action-primary-fg: var(--color-white);
+  --action-secondary: var(--color-slate-700);
+  --action-secondary-fg: var(--color-white);
+  --action-danger: var(--color-red-600);
+  --action-danger-fg: var(--color-white);
+
+  /* --- Tier 2: feedback (status) — same in light and dark --- */
+  --feedback-success: var(--color-green-600);
+  --feedback-success-strong: var(--color-green-500);
+  --feedback-success-border: var(--color-green-200);
+  --feedback-success-muted: var(--color-green-100);
+  --feedback-success-subtle: var(--color-green-50);
+  --feedback-warning: var(--color-amber-600);
+  --feedback-warning-muted: var(--color-amber-100);
+  --feedback-warning-subtle: var(--color-amber-50);
+  --feedback-danger: var(--color-red-600);
+
+  /* --- Tier 2: charts (purple ramp, data series — not buttons) --- */
+  --chart-1: var(--color-purple-950);
+  --chart-2: var(--color-purple-900);
+  --chart-3: var(--color-purple-800);
+  --chart-4: var(--color-purple-700);
+  --chart-5: var(--color-purple-600);
+
+  /* --- Tier 2: sidebar --- */
+  --sidebar: var(--color-slate-50);
+  --sidebar-foreground: var(--color-purple-950);
+  --sidebar-primary: var(--color-purple-950);
+  --sidebar-primary-foreground: var(--color-white);
+  --sidebar-accent: var(--color-fuchsia-100);
+  --sidebar-accent-foreground: var(--color-purple-950);
+  --sidebar-border: var(--color-slate-200);
+  --sidebar-ring: var(--color-purple-950);
+
+  /* DO_NOT_REMOVE_LEGACY_ALIASES — old class names still resolve. See AGENTS.md. */
+  --primary-text: var(--fg-primary);
+  --background: var(--canvas);
+  --foreground: var(--fg-primary);
+  --card: var(--surface);
+  --card-foreground: var(--fg-brand);
+  --popover: var(--surface);
+  --popover-foreground: var(--fg-brand);
+  --primary: var(--action-primary);
+  --primary-foreground: var(--action-primary-fg);
+  --secondary: var(--action-secondary);
+  --secondary-foreground: var(--action-secondary-fg);
+  --tertiary-text: var(--fg-tertiary);
+  --success-50: var(--feedback-success-subtle);
+  --success-100: var(--feedback-success-muted);
+  --success-200: var(--feedback-success-border);
+  --success-500: var(--feedback-success-strong);
+  --success-600: var(--feedback-success);
+  --warning-50: var(--feedback-warning-subtle);
+  --warning-100: var(--feedback-warning-muted);
+  --warning-600: var(--feedback-warning);
+  --error-600: var(--feedback-danger);
+  --muted: var(--surface-subtle);
+  --muted-foreground: var(--fg-tertiary);
+  --accent: var(--surface-muted);
+  --accent-foreground: var(--fg-brand);
+  --destructive: var(--action-danger);
+  --destructive-foreground: var(--action-danger-fg);
+  --border: var(--border-default);
+  --input: var(--border-strong);
+  --ring: var(--border-focus);
+  /* END DO_NOT_REMOVE_LEGACY_ALIASES */
+
+  /* --- Non-color tokens --- */
+  --font-sans: Inter, sans-serif;
+  --font-serif: "Source Serif 4", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-brand: var(--font-sans);
+  --radius: 6px;
+  --cell-size: 32px;
+  --spacing: 4px;
+  --tracking-normal: 0em;
+  --shadow-2xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0px 4px 8px -1px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0px 4px 8px -1px hsl(0 0% 0% / 0.1),
+    0px 1px 2px -2px hsl(0 0% 0% / 0.1);
+  --shadow: 0px 4px 8px -1px hsl(0 0% 0% / 0.1),
+    0px 1px 2px -2px hsl(0 0% 0% / 0.1);
+  --shadow-md: 0px 4px 8px -1px hsl(0 0% 0% / 0.1),
+    0px 2px 4px -2px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0px 4px 8px -1px hsl(0 0% 0% / 0.1),
+    0px 4px 6px -2px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.1),
+    0px 8px 10px -2px hsl(0 0% 0% / 0.1);
+  --shadow-2xl: 0px 4px 8px -1px hsl(0 0% 0% / 0.25);
+}
+
+.dark {
+  --fg-primary: var(--color-slate-50);
+  --fg-secondary: var(--color-slate-300);
+  --fg-tertiary: var(--color-purple-300);
+  --fg-disabled: var(--color-slate-600);
+  --fg-inverse: var(--color-white);
+  --fg-brand: var(--color-purple-100);
+
+  --canvas: var(--color-purple-950);
+  --surface: var(--color-purple-900);
+  --surface-subtle: var(--color-purple-900);
+  --surface-muted: var(--color-purple-800);
+
+  --border-default: var(--color-purple-800);
+  --border-strong: var(--color-purple-800);
+  --border-focus: var(--color-purple-400);
+
+  --action-primary: var(--color-purple-500);
+  --action-primary-hover: var(--color-purple-400);
+  --action-primary-disabled: var(--color-purple-900);
+  --action-primary-fg: var(--color-white);
+  --action-secondary: var(--color-purple-800);
+  --action-secondary-fg: var(--color-purple-100);
+  --action-danger: var(--color-red-500);
+  --action-danger-fg: var(--color-white);
+
+  --sidebar: var(--color-purple-950);
+  --sidebar-foreground: var(--color-purple-100);
+  --sidebar-primary: var(--color-purple-900);
+  --sidebar-primary-foreground: var(--color-white);
+  --sidebar-accent: var(--color-purple-800);
+  --sidebar-accent-foreground: var(--color-fuchsia-100);
+  --sidebar-border: var(--color-purple-800);
+  --sidebar-ring: var(--color-purple-900);
+}

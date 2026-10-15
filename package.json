@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/copy-tokens.cjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@ciq-dev/ciq-design-system": "^0.1.1-develop.19",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"

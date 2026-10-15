@@ -1,0 +1,317 @@
+@import "tw-animate-css";
+@import "../../node_modules/@ciq-dev/ciq-design-system/src/styles/tokens.css";
+
+@source "../";
+@source "../../node_modules/@ciq-dev/ciq-design-system/dist";
+
+/* Include Tier 1 / Tier 2 color classes in the published stylesheet
+   even before components switch off the legacy names. */
+@source inline("bg-brand bg-brand-50 bg-brand-100 bg-brand-200 bg-brand-300 bg-brand-400 bg-brand-500 bg-brand-600 bg-brand-700 bg-brand-800 bg-brand-900 bg-brand-950 bg-primary-dark bg-fg-primary bg-fg-secondary bg-fg-tertiary bg-fg-disabled bg-fg-inverse bg-fg-brand text-fg-primary text-fg-secondary text-fg-tertiary text-fg-disabled text-fg-inverse text-fg-brand bg-canvas bg-surface bg-surface-subtle bg-surface-muted bg-border-default bg-border-strong bg-border-focus border-border-default border-border-strong border-border-focus ring-border-focus divide-border-default bg-action-primary bg-action-primary-hover bg-action-primary-disabled bg-action-primary-fg text-action-primary text-action-primary-fg bg-action-secondary bg-action-secondary-fg text-action-secondary text-action-secondary-fg bg-action-danger bg-action-danger-fg text-action-danger text-action-danger-fg bg-feedback-success bg-feedback-success-strong bg-feedback-success-border bg-feedback-success-muted bg-feedback-success-subtle text-feedback-success bg-feedback-warning bg-feedback-warning-muted bg-feedback-warning-subtle text-feedback-warning bg-feedback-danger text-feedback-danger font-brand type-display type-heading type-title type-body-lg type-body type-body-strong type-label type-caption type-caption-strong type-code");
+
+/* Dark mode is a class on an ancestor (html.dark), not OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+  --font-brand: var(--font-brand);
+
+  /* Tier 1 — CIQ primitives (Tailwind purple + slate-950) */
+  --color-brand: var(--brand);
+  --color-brand-50: var(--color-purple-50);
+  --color-brand-100: var(--color-purple-100);
+  --color-brand-200: var(--color-purple-200);
+  --color-brand-300: var(--color-purple-300);
+  --color-brand-400: var(--color-purple-400);
+  --color-brand-500: var(--color-purple-500);
+  --color-brand-600: var(--color-purple-600);
+  --color-brand-700: var(--color-purple-700);
+  --color-brand-800: var(--color-purple-800);
+  --color-brand-900: var(--color-purple-900);
+  --color-brand-950: var(--color-purple-950);
+  --color-primary-dark: var(--primary-dark);
+
+  /* Tier 2 — foreground */
+  --color-fg-primary: var(--fg-primary);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-tertiary: var(--fg-tertiary);
+  --color-fg-disabled: var(--fg-disabled);
+  --color-fg-inverse: var(--fg-inverse);
+  --color-fg-brand: var(--fg-brand);
+
+  /* Tier 2 — surfaces */
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-muted: var(--surface-muted);
+
+  /* Tier 2 — borders */
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-border-focus: var(--border-focus);
+
+  /* Tier 2 — action */
+  --color-action-primary: var(--action-primary);
+  --color-action-primary-hover: var(--action-primary-hover);
+  --color-action-primary-disabled: var(--action-primary-disabled);
+  --color-action-primary-fg: var(--action-primary-fg);
+  --color-action-secondary: var(--action-secondary);
+  --color-action-secondary-fg: var(--action-secondary-fg);
+  --color-action-danger: var(--action-danger);
+  --color-action-danger-fg: var(--action-danger-fg);
+
+  /* Tier 2 — feedback */
+  --color-feedback-success: var(--feedback-success);
+  --color-feedback-success-strong: var(--feedback-success-strong);
+  --color-feedback-success-border: var(--feedback-success-border);
+  --color-feedback-success-muted: var(--feedback-success-muted);
+  --color-feedback-success-subtle: var(--feedback-success-subtle);
+  --color-feedback-warning: var(--feedback-warning);
+  --color-feedback-warning-muted: var(--feedback-warning-muted);
+  --color-feedback-warning-subtle: var(--feedback-warning-subtle);
+  --color-feedback-danger: var(--feedback-danger);
+
+  /* Tier 2 — charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Tier 2 — sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* DO_NOT_REMOVE_LEGACY_ALIASES — keep old class names working. See AGENTS.md. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-text: var(--primary-text);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-tertiary-text: var(--tertiary-text);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-200: var(--success-200);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-600: var(--warning-600);
+  --color-error-600: var(--error-600);
+  /* END DO_NOT_REMOVE_LEGACY_ALIASES */
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+}
+
+* {
+  border-color: var(--border-default);
+}
+
+body {
+  background-color: var(--canvas);
+  font-family: var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif;
+  color: var(--fg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes spinner-fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes thin-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+}
+
+@keyframes bounce-dots {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.5);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes wave-bars {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes text-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes loading-dots {
+  0%,
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+}
+
+/* Tier 2 — type roles. One class = family + size + weight + leading.
+   Built from Tailwind primitives (text-sm, font-medium, …).
+   Use type-body in components, not text-sm. Prefix is type- so it
+   does not clash with text-fg-primary (color) or text-sm (size). */
+@utility type-display {
+  @apply font-sans text-4xl font-semibold leading-tight tracking-tight;
+}
+
+@utility type-heading {
+  @apply font-sans text-2xl font-semibold leading-tight tracking-tight;
+}
+
+@utility type-title {
+  @apply font-sans text-lg font-semibold leading-snug;
+}
+
+@utility type-body-lg {
+  @apply font-sans text-base font-normal leading-normal;
+}
+
+@utility type-body {
+  @apply font-sans text-sm font-normal leading-normal;
+}
+
+@utility type-body-strong {
+  @apply font-sans text-sm font-medium leading-normal;
+}
+
+@utility type-label {
+  @apply font-sans text-sm font-medium leading-none;
+}
+
+@utility type-caption {
+  @apply font-sans text-xs font-normal leading-normal;
+}
+
+@utility type-caption-strong {
+  @apply font-sans text-xs font-medium leading-normal;
+}
+
+@utility type-code {
+  @apply font-mono text-sm font-normal leading-normal;
+}
