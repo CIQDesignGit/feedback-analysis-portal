@@ -155,7 +155,7 @@ export function FeedbackLog() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="table-cell w-10 bg-surface align-middle">
+                  <TableHead className="table-cell w-10 !bg-surface-muted align-middle">
                     <Checkbox
                       aria-label="Select all on this page"
                       checked={allSelected ? true : someSelected ? "indeterminate" : false}
@@ -164,7 +164,7 @@ export function FeedbackLog() {
                       }
                     />
                   </TableHead>
-                  <TableHead className="table-cell bg-surface text-fg-secondary">
+                  <TableHead className="table-cell !bg-surface-muted pr-6 text-fg-secondary">
                     <button
                       type="button"
                       onClick={() => update({ sort: query.sort === "oldest" ? undefined : "oldest" })}
@@ -175,22 +175,22 @@ export function FeedbackLog() {
                       {query.sort === "oldest" ? <ArrowUp className="size-3.5" aria-hidden /> : <ArrowDown className="size-3.5" aria-hidden />}
                     </button>
                   </TableHead>
-                  <TableHead className="table-cell bg-surface text-fg-secondary">Feedback</TableHead>
-                  <TableHead className="table-cell bg-surface text-fg-secondary">Tags</TableHead>
-                  <TableHead className="table-cell bg-surface text-fg-secondary">Given by</TableHead>
-                  <TableHead className="table-cell bg-surface text-fg-secondary">Conversation</TableHead>
-                  <TableHead className="table-cell bg-surface text-fg-secondary">Status</TableHead>
-                  <TableHead className="table-cell bg-surface text-fg-secondary">Assignee</TableHead>
+                  <TableHead className="table-cell !bg-surface-muted text-fg-secondary">Feedback</TableHead>
+                  <TableHead className="table-cell !bg-surface-muted text-fg-secondary">Tags</TableHead>
+                  <TableHead className="table-cell !bg-surface-muted text-fg-secondary">Given by</TableHead>
+                  <TableHead className="table-cell !bg-surface-muted text-fg-secondary">Conversation</TableHead>
+                  <TableHead className="table-cell !bg-surface-muted text-fg-secondary">Status</TableHead>
+                  <TableHead className="table-cell !bg-surface-muted text-fg-secondary">Assignee</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="[&_td]:!align-top">
                 {rows.map((row) => {
                   const id = row.feedback.id;
                   const isSelected = selected.includes(id);
                   const isNew = row.status === "new";
                   return (
                     <TableRow key={id} className={cn("relative align-top", isSelected && "bg-brand-50/60")}>
-                      <TableCell className="relative z-10">
+                      <TableCell className="relative z-10 align-top pt-2">
                         <Checkbox
                           aria-label={`Select feedback from ${row.author.name}`}
                           checked={isSelected}
@@ -199,13 +199,13 @@ export function FeedbackLog() {
                           }
                         />
                       </TableCell>
-                      <TableCell className="type-caption whitespace-nowrap text-fg-secondary">
+                      <TableCell className="align-top pr-6 type-caption whitespace-nowrap text-fg-secondary">
                         <span className="flex items-center gap-2">
                           {isNew ? <span className="size-2 rounded-full bg-brand" aria-label="New" /> : <span className="size-2" aria-hidden />}
                           {formatDateTime(row.feedback.createdAt)}
                         </span>
                       </TableCell>
-                      <TableCell className="min-w-72 max-w-md">
+                      <TableCell className="align-top min-w-72 max-w-md">
                         <div className="flex items-start gap-2.5">
                           <SentimentIcon sentiment={row.feedback.sentiment} />
                           <div className="flex min-w-0 flex-col gap-1">
@@ -227,16 +227,16 @@ export function FeedbackLog() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="min-w-40">
+                      <TableCell className="align-top min-w-40">
                         <TagList tags={row.feedback.tags} max={2} />
                       </TableCell>
-                      <TableCell className="whitespace-nowrap">
+                      <TableCell className="align-top whitespace-nowrap">
                         <span className="flex flex-col">
                           <span className="type-body text-fg-primary">{row.author.name}</span>
                           <span className="type-caption text-fg-tertiary">{ROLE_LABEL[row.author.role]}</span>
                         </span>
                       </TableCell>
-                      <TableCell className="min-w-48 max-w-64">
+                      <TableCell className="align-top min-w-48 max-w-64">
                         <span className="flex flex-col items-start gap-1">
                           <span className="type-body line-clamp-1 text-fg-secondary">{row.conversation.title}</span>
                           {row.conversationFeedbackCount > 1 && query.conversation !== row.conversation.id ? (
@@ -254,10 +254,10 @@ export function FeedbackLog() {
                           )}
                         </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="align-top">
                         <StatusBadge status={row.status} />
                       </TableCell>
-                      <TableCell className="type-body whitespace-nowrap text-fg-secondary">
+                      <TableCell className="align-top type-body whitespace-nowrap text-fg-secondary">
                         {row.assignee ?? <span className="text-fg-tertiary">Unassigned</span>}
                       </TableCell>
                     </TableRow>
@@ -368,7 +368,6 @@ function Toolbar({ query, onChange }: { query: ListQuery; onChange: (patch: Part
           value={query.theme}
           options={THEME_OPTIONS.map((theme) => ({ value: theme.id, label: theme.label }))}
           onChange={(value) => onChange({ theme: value })}
-          wide
         />
         <FilterSelect
           label="Date"
@@ -388,19 +387,24 @@ function FilterSelect({
   options,
   onChange,
   anyLabel,
-  wide = false,
 }: {
   label: string;
   value: string | undefined;
   options: { value: string; label: string }[];
   onChange: (value: string | undefined) => void;
   anyLabel?: string;
-  wide?: boolean;
 }) {
   return (
     <Select value={value ?? ANY} onValueChange={(next) => onChange(next === ANY ? undefined : next)}>
-      <SelectTrigger aria-label={label} className={cn("h-9", wide ? "w-56" : "w-40", value && "border-border-focus")}>
-        <span className="type-caption text-fg-tertiary">{label}:</span>
+      <SelectTrigger
+        aria-label={label}
+        className={cn(
+          "h-9 w-fit max-w-full justify-start gap-1.5 px-3 text-left",
+          "[&_[data-slot=select-value]]:line-clamp-none [&_[data-slot=select-value]]:whitespace-nowrap",
+          value && "border-border-focus",
+        )}
+      >
+        <span className="type-caption shrink-0 text-fg-tertiary">{label}:</span>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
