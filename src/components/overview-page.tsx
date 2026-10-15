@@ -102,7 +102,10 @@ function OverviewBody({ data }: { data: Overview }) {
 
   return (
     <>
-      <section aria-label="Key numbers" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <section
+        aria-label="Key numbers"
+        className="grid grid-cols-2 overflow-hidden rounded-lg border border-border-default bg-surface md:grid-cols-5 md:divide-x md:divide-border-default"
+      >
         <KpiCard label="New" hint="Not yet triaged" kpi={data.newCount} range={range} href={scoped({ status: "new" })} goodWhen="down" />
         <KpiCard label="Total feedback" kpi={data.total} range={range} href={scoped({})} />
         <KpiCard label="Positive" kpi={data.positiveShare} range={range} percent href={scoped({ sentiment: "positive" })} goodWhen="up" hint={`${data.positive} thumbs up`} />
@@ -270,22 +273,26 @@ function KpiCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col gap-1 rounded-lg border border-border-default bg-surface p-4 transition-colors hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+      className="group flex min-w-0 flex-col gap-0.5 px-4 py-3 transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-focus"
     >
-      <span className="type-caption-strong text-fg-tertiary">{label}</span>
-      <span className="type-heading text-fg-primary">{value}</span>
-      {deltaText ? (
-        <span
-          className={cn(
-            "type-caption inline-flex items-center gap-1",
-            good === null ? "text-fg-secondary" : good ? "text-feedback-success" : "text-feedback-danger",
-          )}
-        >
-          <DeltaIcon className="size-3" aria-hidden />
-          {deltaText} vs {PERIOD[range]}
-        </span>
-      ) : null}
-      {hint ? <span className="type-caption text-fg-tertiary">{hint}</span> : null}
+      <span className="type-caption-strong truncate text-fg-tertiary">{label}</span>
+      <span className="flex flex-wrap items-baseline gap-x-2">
+        <span className="type-heading text-fg-primary">{value}</span>
+        {deltaText ? (
+          <span
+            title={`${deltaText} vs ${PERIOD[range]}`}
+            className={cn(
+              "type-caption inline-flex items-center gap-1",
+              good === null ? "text-fg-secondary" : good ? "text-feedback-success" : "text-feedback-danger",
+            )}
+          >
+            <DeltaIcon className="size-3" aria-hidden />
+            {deltaText}
+            <span className="sr-only"> vs {PERIOD[range]}</span>
+          </span>
+        ) : null}
+      </span>
+      {hint ? <span className="type-caption truncate text-fg-tertiary">{hint}</span> : null}
     </Link>
   );
 }
