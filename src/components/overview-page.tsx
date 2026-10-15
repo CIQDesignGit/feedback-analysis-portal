@@ -113,12 +113,12 @@ function OverviewBody({ data }: { data: Overview }) {
         <KpiCard label="Unassigned and open" hint="New or in progress, no owner" kpi={data.unassignedOpen} range={range} href={scoped({ assignee: UNASSIGNED })} goodWhen="down" />
       </section>
 
-      <Card>
-        <CardHeader className="flex flex-row items-baseline justify-between gap-4 pb-2">
+      <Card className="shadow-none">
+        <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 px-4 pb-0 pt-4">
           <h3 className="type-title text-fg-primary">Sentiment over time</h3>
           <Legend />
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 pb-4 pt-3">
           <SentimentChart days={data.days} />
         </CardContent>
       </Card>
@@ -301,40 +301,84 @@ function Legend() {
   return (
     <span className="flex items-center gap-4">
       <span className="type-caption inline-flex items-center gap-1.5 text-fg-secondary">
-        <span className="size-2 rounded-full bg-feedback-success" aria-hidden /> Positive
+        <span className="h-2.5 w-3 shrink-0 rounded-sm bg-feedback-success-strong" aria-hidden />
+        Positive
       </span>
       <span className="type-caption inline-flex items-center gap-1.5 text-fg-secondary">
-        <span className="size-2 rounded-full bg-feedback-danger" aria-hidden /> Negative
+        <span className="h-2.5 w-3 shrink-0 rounded-sm bg-feedback-danger" aria-hidden />
+        Negative
       </span>
     </span>
   );
 }
 
+const SENTIMENT_PLOT_HEIGHT_PX = 112;
+const SENTIMENT_COUNT_BAND_PX = 18;
+
 function SentimentChart({ days }: { days: Overview["days"] }) {
   const max = Math.max(...days.map((day) => day.positive + day.negative), 1);
   const labelEvery = days.length > 14 ? Math.ceil(days.length / 10) : 1;
+  const columnClass = "flex min-w-7 flex-1 flex-col items-center";
+
   return (
-    <ol className="flex h-40 items-end gap-1.5 overflow-x-auto pt-4">
-      {days.map((day, index) => {
-        const total = day.positive + day.negative;
-        return (
-          <li
-            key={day.date}
-            className="flex h-full min-w-6 flex-1 flex-col items-center justify-end gap-1.5"
-            aria-label={`${formatShortDay(day.date)}: ${day.positive} positive, ${day.negative} negative`}
-          >
-            <span className="type-caption text-fg-tertiary">{total || ""}</span>
-            <span className="flex w-full max-w-10 flex-col justify-end overflow-hidden rounded-sm" style={{ height: `${(total / max) * 100}%` }}>
-              <span className="bg-feedback-danger" style={{ flexGrow: day.negative }} />
-              <span className="bg-feedback-success" style={{ flexGrow: day.positive }} />
-            </span>
-            <span className="type-caption whitespace-nowrap text-fg-tertiary">
-              {index % labelEvery === 0 ? formatShortDay(day.date) : "\u00a0"}
-            </span>
-          </li>
-        );
-      })}
-    </ol>
+    <div className="rounded-lg border border-border-default bg-surface-muted/50 px-2 pt-3 sm:px-3">
+      <div className="relative h-28">
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-between" aria-hidden>
+          <div className="border-t border-dashed border-border-default/50" />
+          <div className="border-t border-dashed border-border-default/50" />
+          <div className="border-t border-border-default" />
+        </div>
+        <ol className="relative flex h-full items-stretch gap-1 overflow-x-auto sm:gap-1.5">
+          {days.map((day) => {
+            const total = day.positive + day.negative;
+            const barHeightPx = total
+              ? Math.max(
+                  (total / max) * (SENTIMENT_PLOT_HEIGHT_PX - SENTIMENT_COUNT_BAND_PX),
+                  10,
+                )
+              : 0;
+            return (
+              <li
+                key={day.date}
+                className={cn(columnClass, "justify-end")}
+                aria-label={`${formatShortDay(day.date)}: ${day.positive} positive, ${day.negative} negative`}
+              >
+                <span
+                  className={cn(
+                    "type-caption mb-1 tabular-nums leading-none",
+                    total ? "font-medium text-fg-secondary" : "text-fg-disabled",
+                  )}
+                >
+                  {total || "—"}
+                </span>
+                {total === 0 ? (
+                  <div className="h-0.5 w-full max-w-8 rounded-full bg-border-strong/40" aria-hidden />
+                ) : (
+                  <div
+                    className="flex w-full max-w-10 flex-col justify-end overflow-hidden rounded-t-md ring-1 ring-border-default/40"
+                    style={{ height: barHeightPx }}
+                  >
+                    {day.negative > 0 ? (
+                      <div className="min-h-px bg-feedback-danger" style={{ flex: day.negative }} />
+                    ) : null}
+                    {day.positive > 0 ? (
+                      <div className="min-h-px bg-feedback-success-strong" style={{ flex: day.positive }} />
+                    ) : null}
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+      <div className="flex gap-1 overflow-x-auto pb-2 pt-1.5 sm:gap-1.5" aria-hidden>
+        {days.map((day, index) => (
+          <div key={`${day.date}-label`} className={cn(columnClass, "type-caption whitespace-nowrap text-fg-tertiary")}>
+            {index % labelEvery === 0 ? formatShortDay(day.date) : "\u00a0"}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -361,9 +405,9 @@ function TagRanking({
         {tags.length === 0 ? (
           <p className="type-body text-fg-secondary">No tags in this range.</p>
         ) : (
-          <ol className="flex flex-col">
+          <ol className="flex flex-col gap-3">
             {tags.map((entry, index) => (
-              <li key={entry.tag} className="border-b border-border-default py-2.5 last:border-b-0">
+              <li key={entry.tag}>
                 <Link
                   href={hrefFor(entry)}
                   className="group flex flex-col gap-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"

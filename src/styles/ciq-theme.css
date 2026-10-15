@@ -136,8 +136,19 @@
   --shadow-2xl: var(--shadow-2xl);
 }
 
-* {
-  border-color: var(--border-default);
+/* Portal: CIQ semantic positive uses emerald (DS package still maps green). */
+:root {
+  --feedback-success: var(--color-emerald-600);
+  --feedback-success-strong: var(--color-emerald-500);
+  --feedback-success-border: var(--color-emerald-200);
+  --feedback-success-muted: var(--color-emerald-100);
+  --feedback-success-subtle: var(--color-emerald-50);
+}
+
+@layer base {
+  * {
+    border-color: var(--border-default);
+  }
 }
 
 body {

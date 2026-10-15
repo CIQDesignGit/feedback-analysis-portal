@@ -39,7 +39,19 @@ export function Transcript({
 
   const currentId = current.feedback.id;
   useEffect(() => {
-    document.getElementById("current-anchor")?.scrollIntoView({ block: "center", behavior: "smooth" });
+    const anchor = document.getElementById("current-anchor");
+    const scroller = document.getElementById("main-scroll");
+    if (!anchor || !scroller) return;
+
+    const frame = requestAnimationFrame(() => {
+      const anchorRect = anchor.getBoundingClientRect();
+      const scrollerRect = scroller.getBoundingClientRect();
+      const relativeTop = anchorRect.top - scrollerRect.top + scroller.scrollTop;
+      const target =
+        relativeTop - scroller.clientHeight / 2 + anchorRect.height / 2;
+      scroller.scrollTo({ top: target, behavior: "smooth" });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [currentId]);
 
   return (
