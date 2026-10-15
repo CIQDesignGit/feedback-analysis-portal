@@ -8,7 +8,15 @@ const TONE: Record<Sentiment, string> = {
   negative: "bg-feedback-danger/10 text-feedback-danger",
 };
 
-export function SentimentIcon({ sentiment, className }: { sentiment: Sentiment; className?: string }) {
+export function SentimentIcon({
+  sentiment,
+  className,
+  iconClassName,
+}: {
+  sentiment: Sentiment;
+  className?: string;
+  iconClassName?: string;
+}) {
   const Icon = sentiment === "positive" ? ThumbsUp : ThumbsDown;
   return (
     <span
@@ -16,7 +24,7 @@ export function SentimentIcon({ sentiment, className }: { sentiment: Sentiment; 
       role="img"
       aria-label={SENTIMENT_LABEL[sentiment]}
     >
-      <Icon className="size-3.5" aria-hidden />
+      <Icon className={cn("size-3.5", iconClassName)} aria-hidden />
     </span>
   );
 }

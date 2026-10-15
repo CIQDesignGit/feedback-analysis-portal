@@ -5,12 +5,14 @@ import {
   CardContent,
   CardHeader,
   EmptyState,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Skeleton,
-  Tabs,
-  TabsList,
-  TabsTrigger,
 } from "@ciq-dev/ciq-design-system";
-import { ArrowRight, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, ThumbsDown, ThumbsUp, TrendingDown, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
@@ -60,15 +62,18 @@ export function OverviewPage() {
             {data ? headline(data) : "How people rate Ask Ally's answers, and what needs a reviewer."}
           </p>
         </div>
-        <Tabs value={range} onValueChange={setRange}>
-          <TabsList aria-label="Date range">
+        <Select value={range} onValueChange={setRange}>
+          <SelectTrigger aria-label="Date range" className="h-9 w-44 shrink-0">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
             {RANGES.map((value) => (
-              <TabsTrigger key={value} value={value}>
+              <SelectItem key={value} value={value}>
                 {RANGE_LABEL[value]}
-              </TabsTrigger>
+              </SelectItem>
             ))}
-          </TabsList>
-        </Tabs>
+          </SelectContent>
+        </Select>
       </header>
 
       {phase === "loading" ? <OverviewFallback /> : null}
@@ -106,7 +111,7 @@ function OverviewBody({ data }: { data: Overview }) {
         aria-label="Key numbers"
         className="grid grid-cols-2 overflow-hidden rounded-lg border border-border-default bg-surface md:grid-cols-5 md:divide-x md:divide-border-default"
       >
-        <KpiCard label="New" hint="Not yet triaged" kpi={data.newCount} range={range} href={scoped({ status: "new" })} goodWhen="down" />
+        <KpiCard label="New feedback" hint="Not yet triaged" kpi={data.newCount} range={range} href={scoped({ status: "new" })} goodWhen="down" />
         <KpiCard label="Total feedback" kpi={data.total} range={range} href={scoped({})} />
         <KpiCard label="Positive" kpi={data.positiveShare} range={range} percent href={scoped({ sentiment: "positive" })} goodWhen="up" hint={`${data.positive} thumbs up`} />
         <KpiCard label="Negative" kpi={data.negativeShare} range={range} percent href={scoped({ sentiment: "negative" })} goodWhen="down" hint={`${data.negative} thumbs down`} />
@@ -207,34 +212,29 @@ function OverviewBody({ data }: { data: Overview }) {
           <CardHeader>
             <h3 className="type-title text-fg-primary">By user role</h3>
           </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            {data.roles.map((entry) => {
-              const total = entry.positive + entry.negative;
-              return (
-                <Link
-                  key={entry.role}
-                  href={scoped({ role: entry.role })}
-                  className="group flex flex-col gap-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-                >
-                  <span className="flex items-baseline justify-between gap-4">
-                    <span className="type-body-strong text-fg-primary group-hover:text-action-primary">
-                      {ROLE_LABEL[entry.role]}
-                    </span>
-                    <span className="type-caption text-fg-secondary">
-                      {entry.positive} positive · {entry.negative} negative
-                    </span>
+          <CardContent className="flex flex-wrap gap-2">
+            {data.roles.map((entry) => (
+              <Link
+                key={entry.role}
+                href={scoped({ role: entry.role })}
+                className="group inline-flex min-w-0 items-stretch overflow-hidden rounded-lg border border-border-default bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus hover:border-border-strong"
+                aria-label={`${ROLE_LABEL[entry.role]}: ${entry.positive} positive, ${entry.negative} negative`}
+              >
+                <span className="type-caption-strong flex items-center whitespace-nowrap bg-surface-muted px-2 text-fg-primary group-hover:bg-surface-subtle group-hover:text-action-primary">
+                  {ROLE_LABEL[entry.role]}
+                </span>
+                <span className="flex items-center gap-1 px-1.5 py-1">
+                  <span className="inline-flex items-center gap-0.5 rounded-md bg-feedback-success-subtle px-1.5 py-0.5 type-caption-strong tabular-nums text-feedback-success">
+                    <ThumbsUp className="size-3" aria-hidden />
+                    {entry.positive}
                   </span>
-                  <span
-                    className="flex h-2 overflow-hidden rounded-full bg-surface-muted"
-                    role="img"
-                    aria-label={`${ROLE_LABEL[entry.role]}: ${entry.positive} positive, ${entry.negative} negative`}
-                  >
-                    <span className="bg-feedback-success" style={{ width: `${(entry.positive / total) * 100}%` }} />
-                    <span className="bg-feedback-danger" style={{ width: `${(entry.negative / total) * 100}%` }} />
+                  <span className="inline-flex items-center gap-0.5 rounded-md bg-red-50 px-1.5 py-0.5 type-caption-strong tabular-nums text-red-600">
+                    <ThumbsDown className="size-3" aria-hidden />
+                    {entry.negative}
                   </span>
-                </Link>
-              );
-            })}
+                </span>
+              </Link>
+            ))}
           </CardContent>
         </Card>
       </div>
@@ -305,7 +305,7 @@ function Legend() {
         Positive
       </span>
       <span className="type-caption inline-flex items-center gap-1.5 text-fg-secondary">
-        <span className="h-2.5 w-3 shrink-0 rounded-sm bg-feedback-danger" aria-hidden />
+        <span className="h-2.5 w-3 shrink-0 rounded-sm bg-red-400" aria-hidden />
         Negative
       </span>
     </span>
@@ -359,7 +359,7 @@ function SentimentChart({ days }: { days: Overview["days"] }) {
                     style={{ height: barHeightPx }}
                   >
                     {day.negative > 0 ? (
-                      <div className="min-h-px bg-feedback-danger" style={{ flex: day.negative }} />
+                      <div className="min-h-px bg-red-400" style={{ flex: day.negative }} />
                     ) : null}
                     {day.positive > 0 ? (
                       <div className="min-h-px bg-feedback-success-strong" style={{ flex: day.positive }} />
@@ -446,18 +446,24 @@ function ThemeCard({ theme, range, href }: { theme: ThemeSummary; range: DateRan
   const delta = theme.count - theme.previousCount;
   return (
     <Card className="flex flex-col">
-      <CardHeader className="flex flex-col gap-2 pb-3">
-        <div className="flex items-start gap-2">
-          <SentimentIcon sentiment={theme.sentiment} className="mt-0.5" />
-          <h3 className="type-body-strong flex-1 text-fg-primary">{theme.label}</h3>
+      <CardHeader className="pb-3">
+        <div className="flex items-stretch gap-2">
+          <SentimentIcon
+            sentiment={theme.sentiment}
+            className="size-auto h-full min-h-11 w-11 shrink-0 rounded-lg"
+            iconClassName="size-5"
+          />
+          <div className="flex min-w-0 flex-col gap-1">
+            <h3 className="type-body-strong text-fg-primary">{theme.label}</h3>
+            <p className="type-caption text-fg-secondary">
+              {theme.count} feedback
+              {range !== "all" ? ` · ${delta >= 0 ? "+" : ""}${delta} vs ${PERIOD[range]}` : ""}
+            </p>
+          </div>
         </div>
-        <p className="type-caption text-fg-secondary">
-          {theme.count} feedback
-          {range !== "all" ? ` · ${delta >= 0 ? "+" : ""}${delta} vs ${PERIOD[range]}` : ""}
-        </p>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-3">
-        <p className="type-body text-fg-secondary">{theme.summary}</p>
+        <p className="type-body-lg type-body-strong text-fg-primary">{theme.summary}</p>
         <ul className="flex flex-col gap-2">
           {theme.quotes.map((quote) => (
             <li key={quote.feedbackId}>
